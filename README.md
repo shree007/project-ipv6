@@ -12,3 +12,7 @@ Create following Infra components in AWS and it should be only use ipv6 IP addre
 6. Grafana
 7. Victoria-Metrics-Components
 8. Fluent-bit+Self-hosted ElasticSearch+Kibana
+
+==========================================================================================
+Test Locally
+$ docker compose up --build -d
