@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  application01:
+    build:
+      context: ./apps/ipv6-p01-application-01
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+
+  application02:
+    build:
+      context: ./apps/ipv6-p01-application-01
+    environment:
+      - APP_ENV=docker
+    ports:
+      - "8090:8090"
+    networks:
+      - app_network
+
+networks:
+  app_network:
