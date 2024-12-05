@@ -1,0 +1,37 @@
+replicaCount: 1
+env:
+  enabled: false
+automountServiceAccountToken: false
+resources:
+  limits:
+    memory: "256Mi"
+    cpu: "500m"
+  requests:
+    memory: "128Mi"
+    cpu: "250m"
+networkPolicy:
+  enabled: false
+securityContext:
+  runAsUser: 10000
+  runAsGroup: 10000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+probes:
+  enabled: false
+  liveness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+    path: /
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3 
+    path: /
+
+volumeMounts:
+  appDataPath: /data/app
