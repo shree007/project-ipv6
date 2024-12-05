@@ -1,0 +1,15 @@
+image:
+  repository: shreeprakashagrahari05/project-ipv6-p01-docker-image-multi-arch-01
+  tag: 20241120-163313 # It is not going to be used, when i will execute script it will be passed latest image
+
+networkPolicy:
+  enabled: true
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+probes:
+  enabled: true
+  path: /?token=bXlfc2VjdXJlX3Rva2Vu

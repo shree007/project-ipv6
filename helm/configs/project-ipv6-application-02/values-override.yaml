@@ -1,0 +1,16 @@
+env:
+  enabled: true
+  value: "kubernetes"
+
+image:
+  repository: shreeprakashagrahari05/project-ipv6-p01-docker-image-multi-arch-02
+  tag: 20241120-163313
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8090
+
+probes:
+  enabled: true
+  path: /?token=YXBwbGljYXRpb250d29fc2VjdXJlX3Rva2Vu
