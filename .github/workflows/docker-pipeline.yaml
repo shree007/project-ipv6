@@ -5,18 +5,14 @@ run-name: ${{ github.actor }} docker pipeline
 on:
   push:
     branches:
-      - 06-mar-2024
-      - main
+      - "*"
+  pull_request:
 
 jobs:
-  check-bats-version:
-    if: false
-    runs-on: ubuntu-latest
+  lint:
+    name: lint dockerfiles
+    runs-on: ubuntu-test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - run: npm install -g bats 
-      - run: bats -v
+     - name: Checkout Code
+       uses: actions/checkout@v3
       
