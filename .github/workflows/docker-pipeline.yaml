@@ -5,14 +5,43 @@ run-name: ${{ github.actor }} docker pipeline
 on:
   push:
     branches:
-      - "*"
+      - "create-github-pipeline-for-docker"
+      - "main"
   pull_request:
 
 jobs:
   lint:
     name: lint dockerfiles
-    runs-on: ubuntu-test
+    runs-on: [ubuntu-latest]
     steps:
-     - name: Checkout Code
-       uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install hadolint
+        run: |
+          sudo wget -O /usr/local/bin/hadolint \
+            https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          sudo chmod +x /usr/local/bin/hadolint
+      - name: Find and Lint Dockerfiles
+        run: |
+          find . -name "Dockerfile" | while read dockerfile; do
+            echo "Linting $dockerfile"
+            hadolint "$dockerfile" || echo "Warnings found in $dockerfile"
+          done
+  build:
+    name: Build multi arch docker image
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       
+      - name: Set up QEMU for multi-arch build
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: "linux/amd64,linux/arm64"
+      
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v2
+      
+        
+
+       
