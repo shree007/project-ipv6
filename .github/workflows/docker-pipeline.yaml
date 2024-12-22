@@ -41,6 +41,10 @@ jobs:
       
       - name: Setup docker buildx
         uses: docker/setup-buildx-action@v2
+      
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
       - name: Build Multi-Arch Images
         run: |
@@ -53,6 +57,8 @@ jobs:
               --tag ${{ secrets.DOCKERHUBUSERNAME }}/$app_name:latest \
               --load \
               "$app_dir"
+            echo "Scanning image for $app_name with Trivy"
+            trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKERHUBUSERNAME }}/$app_name:latest || exit 1
           done
 
       - name: Log in to DockerHub
