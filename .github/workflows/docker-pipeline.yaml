@@ -42,14 +42,50 @@ jobs:
       - name: Setup docker buildx
         uses: docker/setup-buildx-action@v2
       
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+      
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUBUSERNAME }}
           password: ${{ secrets.DOCKERHUBPASSWORD }}
-
       
-      
-        
+      - name: Build, Scan, and Conditionally Push Docker Images
+        run: |
+          build_and_push_image() {
+            local DOCKERFILE_DIR=$1
+            local IMAGE_NAME=$2
 
-       
+            echo "Building Docker image for scanning: $IMAGE_NAME..."
+            docker buildx build --platform linux/amd64 \
+              -t "${IMAGE_NAME}:latest" \
+              -f "${DOCKERFILE_DIR}/Dockerfile" \
+              ${DOCKERFILE_DIR} --load
+
+            echo "Scanning Docker image with Trivy: $IMAGE_NAME..."
+            SCAN_RESULTS=$(trivy image --format json --quiet "${IMAGE_NAME}:latest")
+
+            HIGH_SEVERITY=$(echo "$SCAN_RESULTS" | jq '.Results[] | select(.Severity == "HIGH" or .Severity == "CRITICAL")')
+
+            if [ -n "$HIGH_SEVERITY" ]; then
+              echo "High-severity vulnerabilities found for $IMAGE_NAME. Aborting push."
+              echo "$HIGH_SEVERITY" | jq
+              exit 1
+            else
+              echo "No high-severity vulnerabilities found for $IMAGE_NAME. Rebuilding and pushing multi-arch image..."
+              docker buildx build --platform linux/amd64,linux/arm64 \
+                -t "${IMAGE_NAME}:latest" \
+                -f "${DOCKERFILE_DIR}/Dockerfile" \
+                ${DOCKERFILE_DIR} --push
+            fi
+          }
+          find ./apps -name "Dockerfile" | while read dockerfile; do
+            app_dir=$(dirname "$dockerfile")
+            app_name=$(basename "$app_dir")
+            image_name="shreeprakashagrahari05/$app_name"
+
+            echo "Processing $image_name from $app_dir"
+            build_and_push_image "$app_dir" "$image_name"
+          done
