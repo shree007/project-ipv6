@@ -7,6 +7,8 @@ include "root" {
   path = find_in_parent_folders()
 }
 
+
+# Specify inputs for the VPC module
 inputs = {
   aws_region                 = "us-east-1"
   vpc_cidr                  = "10.0.0.0/16"
@@ -18,6 +20,7 @@ inputs = {
   private_subnet_name_prefix = "multi-az-private-subnet"
 }
 
+# Remote state configuration
 remote_state {
   backend = "s3"
   config = {
