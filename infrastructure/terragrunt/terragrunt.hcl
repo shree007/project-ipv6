@@ -7,6 +7,7 @@ include "root" {
   path = find_in_parent_folders()
 }
 
+
 # Specify inputs for the VPC module
 inputs = {
   aws_region                 = "us-east-1"
