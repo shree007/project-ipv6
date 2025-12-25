@@ -10,7 +10,6 @@ include "root" {
 inputs = {
   aws_region                 = "us-east-1"
   vpc_cidr                  = "10.0.0.0/16"
-  ipv6_cidr                 = "2600:1f18:abcd::/56"
   vpc_name                  = "multi-az-vpc"
   igw_name                  = "multi-az-igw"
   public_rt_name            = "multi-az-public-rt"
