@@ -4,9 +4,6 @@ module "eks" {
   cluster_version = "1.30"
   subnets         = var.subnet_ids
   vpc_id          = var.vpc_id
-  cluster_ip_family             = var.cluster_ip_family
-  create_cni_ipv6_iam_policy     = var.create_cni_ipv6_iam_policy
-  cluster_addons                 = var.cluster_addons
 
   node_groups = {
     default = {

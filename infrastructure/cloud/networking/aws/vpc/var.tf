@@ -11,9 +11,9 @@ variable "vpc_cidr" {
 }
 
 variable "ipv6_cidr" {
-  description = "Optional IPv6 CIDR block for the VPC (leave empty to auto-assign)"
+  description = "The IPv6 CIDR block for the VPC"
   type        = string
-  default     = ""
+  default     = "2600:1f18:abcd::/56"
 }
 
 variable "vpc_name" {

@@ -49,25 +49,3 @@ variable "subnet_ids" {
   description = "The IDs of the subnets"
   type        = list(string)
 }
-
-variable "cluster_ip_family" {
-  description = "Kubernetes cluster IP family (ipv4 or ipv6)"
-  type        = string
-  default     = "ipv6"
-}
-
-variable "create_cni_ipv6_iam_policy" {
-  description = "Attach the IPv6 CNI IAM policy to node roles"
-  type        = bool
-  default     = true
-}
-
-variable "cluster_addons" {
-  description = "EKS cluster addons configuration"
-  type        = map(any)
-  default = {
-    vpc-cni = {
-      most_recent = true
-    }
-  }
-}
